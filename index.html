@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio Kelompok 9 | X RPL 2</title>
+    
+    <!-- Font Awesome & Web Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Dark Blue Theme */
+            --bg-color: #070d1e;
+            --card-bg: rgba(13, 22, 45, 0.75);
+            --inner-card-bg: rgba(20, 32, 60, 0.65);
+            --card-border: rgba(56, 189, 248, 0.25);
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+            --text-muted: rgba(148, 163, 184, 0.6);
+            --accent-color: #38bdf8;
+            --active-silhouette: #38bdf8; 
+            --inactive-silhouette: #64748b;
+            --dock-bg: rgba(13, 22, 45, 0.85);
+            --pill-active-bg: rgba(56, 189, 248, 0.22);
+            --pill-active-text: #38bdf8;
+            --skill-badge-bg: rgba(56, 189, 248, 0.1);
+            --skill-badge-border: rgba(56, 189, 248, 0.3);
+            
+            /* Background khusus popup menu agar tidak tembus pandang */
+            --dropdown-bg: rgba(13, 22, 45, 0.98);
+            
+            /* Liquid Glass Glow Gradients */
+            --glass-glow-1: rgba(56, 189, 248, 0.35);
+            --glass-glow-2: rgba(168, 85, 247, 0.35);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme with Soft Blue Accent */
+            --bg-color: #f1f5f9;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --inner-card-bg: rgba(241, 245, 249, 0.9);
+            --card-border: rgba(56, 189, 248, 0.35);
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --text-muted: rgba(100, 116, 139, 0.65);
+            --accent-color: #0284c7;
+            --active-silhouette: #0284c7; 
+            --inactive-silhouette: #94a3b8;
+            --dock-bg: rgba(255, 255, 255, 0.85);
+            --pill-active-bg: rgba(56, 189, 248, 0.2);
+            --pill-active-text: #0284c7;
+            --skill-badge-bg: rgba(56, 189, 248, 0.1);
+            --skill-badge-border: rgba(56, 189, 248, 0.3);
+            
+            /* Background khusus popup menu agar tidak tembus pandang */
+            --dropdown-bg: rgba(255, 255, 255, 0.98);
+            
+            /* Liquid Glass Glow Gradients (Light) */
+            --glass-glow-1: rgba(56, 189, 248, 0.25);
+            --glass-glow-2: rgba(168, 85, 247, 0.25);
+            --glass-highlight: rgba(255, 255, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 100px 16px 20px 16px;
+            position: relative;
+        }
+
+        /* BACKGROUND FOTO - PAKAI <img> BUKAN CSS url(), BIAR KEBACA DI APP LOKAL */
+        .bg-photo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* FLOATING DOCK WRAPPER - DIPINDAH KE KANAN */
+        .dock-wrapper {
+            position: fixed;
+            top: 24px;
+            left: 0; 
+            right: 0;
+            padding: 0 28px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Posisi dock digeser ke kanan */
+        }
+
+        .left-controls {
+            position: absolute;
+            left: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mini-avatar-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--dock-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-color);
+            font-size: 16px;
+            opacity: 0;
+            transform: scale(0.5) translateX(-20px);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        .mini-avatar-btn.show {
+            opacity: 1;
+            transform: scale(1) translateX(0);
+            pointer-events: auto;
+        }
+
+        .mini-avatar-btn:hover {
+            transform: scale(1.08);
+            border-color: var(--accent-color);
+        }
+
+        /* FLOATING DOCK - UKURAN DIPERKECIL SESUAI PROPORSI AVATAR */
+        .floating-dock {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 9999px;
+            background: var(--dock-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .dock-item {
+            position: relative;
+            height: 40px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--text-sub);
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dock-item i {
+            font-size: 16px;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .dock-label {
+            max-width: 0;
+            opacity: 0;
+            margin-left: 0;
+            font-size: 0.88rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .dock-item:not(.active):hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dock-item.active {
+            background: var(--pill-active-bg);
+            color: var(--pill-active-text);
+            padding: 0 18px 0 14px;
+        }
+
+        .dock-item.active .dock-label {
+            max-width: 100px;
+            opacity: 1;
+            margin-left: 8px;
+        }
+
+        .dock-item.active i {
+            transform: scale(1.08);
+        }
+
+        .dock-divider {
+            width: 1px;
+            height: 20px;
+            background: var(--card-border);
+            margin: 0 2px;
+        }
+
+        .theme-toggle-btn {
+            width: 40px; 
+            height: 40px;
+            border-radius: 50%;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: none;
+            color: var(--text-sub);
+            font-size: 16px;
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.05);
+            color: var(--text-main);
+        }
+
+        /* POPUP HAMBURGER MENU - BLUR DIRETENSI DENGAN BACKGROUND SOLID TERKONTROL */
+        .dropdown-menu {
+            position: absolute;
+            top: 56px;
+            right: 0;
+            width: 240px;
+            background: var(--dropdown-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 14px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 1005;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px); /* Penebalan Efek Blur */
+            animation: slideDown 0.2s ease-out forwards;
+        }
+
+        .dropdown-menu.show { display: flex; }
+
+        .menu-category {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 8px 0 4px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 13.5px;
+            font-weight: 600;
+            background: transparent;
+            border: 1px solid transparent;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--accent-color);
+        }
+
+        .menu-item i.siluet-icon {
+            font-size: 15px;
+            color: var(--inactive-silhouette);
+            transition: color 0.2s ease;
+        }
+
+        /* Penanda Opsi Aktif Warna Biru */
+        .menu-item.active {
+            background: var(--pill-active-bg);
+            color: var(--accent-color);
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-color);
+            font-weight: 700;
+        }
+
+        .menu-item.active i.siluet-icon {
+            color: var(--accent-color);
+        }
+
+        .menu-divider {
+            height: 1px;
+            background: var(--card-border);
+            margin: 4px 0;
+        }
+
+        /* Container Card Utama (Default / Portrait) */
+        .main-card {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 32px;
+            padding: 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            overflow: hidden;
+            transition: max-width 0.4s ease, padding 0.4s ease;
+        }
+
+        .landscape-title-info {
+            display: none !important;
+        }
+
+        @media (min-width: 868px) {
+            body {
+                padding-top: 100px;
+            }
+
+            .main-card {
+                max-width: 1140px;
+                padding: 40px;
+                border-radius: 36px;
+            }
+
+            .profile-grid-layout {
+                display: grid;
+                grid-template-columns: 360px 1fr;
+                gap: 36px;
+                align-items: start;
+            }
+
+            .left-profile-box {
+                background: var(--inner-card-bg);
+                border: 1px solid var(--card-border);
+                border-top: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 28px;
+                padding: 24px;
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .right-column {
+                display: flex;
+                flex-direction: column;
+                padding-top: 4px;
+            }
+
+            .landscape-title-info {
+                display: flex !important;
+                font-size: 28px;
+                margin-bottom: 24px;
+            }
+
+            .photo-frame {
+                height: 330px !important;
+                margin-bottom: 0 !important;
+            }
+        }
+
+        .animated-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: 32px;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .animated-title span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: elasticSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        .photo-frame {
+            width: 100%;
+            height: 220px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: var(--text-sub);
+            font-weight: 600;
+            font-size: 18px;
+            overflow: hidden;
+        }
+
+        .biodata-group {
+            margin-bottom: 18px;
+        }
+
+        .biodata-label {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-color);
+            margin-bottom: 6px;
+        }
+
+        .biodata-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-main);
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--card-border);
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .pronouns {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .social-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 12px;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            padding: 10px 14px;
+            border-radius: 12px;
+        }
+
+        .social-item a {
+            color: var(--text-main);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .social-item a:hover {
+            color: var(--accent-color);
+        }
+
+        .social-item i {
+            font-size: 18px;
+            color: var(--accent-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--card-border);
+        }
+
+        .skill-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--skill-badge-bg);
+            border: 1px solid var(--skill-badge-border);
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .skill-badge i {
+            color: var(--accent-color);
+            font-size: 12px;
+        }
+
+        .tab-view {
+            display: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-view.active {
+            display: block;
+        }
+
+        /* MODAL ABOUT PORTFOLIO */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show { 
+            display: flex; 
+            opacity: 1;
+        }
+
+        .portfolio-modal {
+            position: relative;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            padding: 32px;
+            width: 100%;
+            max-width: 580px;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            max-height: 85vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-overlay.show .portfolio-modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .liquid-orb-1, .liquid-orb-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .liquid-orb-1 {
+            width: 160px;
+            height: 160px;
+            background: var(--glass-glow-1);
+            top: -30px;
+            right: -30px;
+            animation: liquidFloat1 8s ease-in-out infinite alternate;
+        }
+
+        .liquid-orb-2 {
+            width: 180px;
+            height: 180px;
+            background: var(--glass-glow-2);
+            bottom: -40px;
+            left: -40px;
+            animation: liquidFloat2 10s ease-in-out infinite alternate;
+        }
+
+        @keyframes liquidFloat1 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-25px, 30px) scale(1.15); }
+            100% { transform: translate(-40px, -15px) scale(0.9); }
+        }
+
+        @keyframes liquidFloat2 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -25px) scale(1.2); }
+            100% { transform: translate(20px, 30px) scale(0.95); }
+        }
+
+        .portfolio-modal .modal-header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .portfolio-modal h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, var(--text-main) 30%, var(--accent-color) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .portfolio-modal .sub-header {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+
+        .slide-card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .slide-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--glass-highlight),
+                transparent
+            );
+            transform: skewX(-20deg);
+            transition: left 0.75s ease;
+        }
+
+        .slide-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .slide-card:hover::before {
+            left: 150%;
+        }
+
+        .slide-tag {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--accent-color);
+            letter-spacing: 1.5px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .slide-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-desc {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+
+        .slide-desc ul {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 8px;
+        }
+
+        .slide-desc li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 6px;
+        }
+
+        .slide-desc li::before {
+            content: "•";
+            color: var(--accent-color);
+            font-size: 18px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+
+        .btn-close-modal {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-main);
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-close-modal:hover {
+            border-color: var(--accent-color);
+            background: var(--pill-active-bg);
+            color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes elasticSlideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- BACKGROUND FOTO (pakai <img>, bukan CSS url(), biar konsisten sama foto profil yang udah kebaca) -->
+    <img class="bg-photo" id="bg-photo" src="background/background1.jpg" alt="">
+
+    <!-- FLOATING DOCK -->
+    <div class="dock-wrapper">
+        <div class="left-controls">
+            <button class="mini-avatar-btn" id="mini-avatar" aria-label="Profil Singkat" title="Profil Singkat">
+                <i class="fa-solid fa-user-astronaut"></i>
+            </button>
+        </div>
+
+        <nav class="floating-dock" id="dock">
+            <button class="dock-item active" id="btn-dock-profile" onclick="switchView('profile')" aria-label="Profile">
+                <i class="fa-solid fa-user"></i>
+                <span class="dock-label">Profile</span>
+            </button>
+            <button class="dock-item" id="btn-dock-about" onclick="switchView('about')" aria-label="About Me">
+                <i class="fa-solid fa-code"></i>
+                <span class="dock-label">About</span>
+            </button>
+
+            <div class="dock-divider"></div>
+
+            <button class="theme-toggle-btn" id="menu-toggle" aria-label="Menu Options" title="Menu Options">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+
+            <div class="dropdown-menu" id="dropdown-menu">
+                <div class="menu-category">PRESET TEMA</div>
+                <button class="menu-item active" id="btn-theme-light" onclick="setTheme('light')">
+                    <i class="fa-solid fa-sun siluet-icon"></i> Light Mode
+                </button>
+                <button class="menu-item" id="btn-theme-dark" onclick="setTheme('dark')">
+                    <i class="fa-solid fa-moon siluet-icon"></i> Dark Mode
+                </button>
+                
+                <div class="menu-divider"></div>
+
+                <div class="menu-category">GANTI BIODATA</div>
+                <button class="menu-item active" id="btn-student-fatur" onclick="setStudent('fatur')">
+                    <i class="fa-solid fa-user siluet-icon"></i> Fatur
+                </button>
+                <button class="menu-item" id="btn-student-deska" onclick="setStudent('deska')">
+                    <i class="fa-solid fa-user siluet-icon"></i> Deska
+                </button>
+
+                <div class="menu-divider"></div>
+
+                <button class="menu-item" onclick="togglePortfolioModal(true)">
+                    <i class="fa-solid fa-circle-info siluet-icon"></i> About Portfolio
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Card Container -->
+    <div class="main-card">
+        <div class="liquid-orb-1"></div>
+        <div class="liquid-orb-2"></div>
+        
+        <!-- View 1: Profile -->
+        <div class="tab-view active" id="view-profile">
+            <div class="profile-grid-layout">
+                
+                <!-- Kotak Kiri (Bila Landscape) / Elemen Atas (Bila Portrait) -->
+                <div class="left-profile-box">
+                    <h1 class="animated-title" id="title-profile">Profile</h1>
+
+                    <div class="photo-frame" id="main-photo-frame">
+                        <i class="fa-solid fa-image" style="margin-right: 8px;"></i> Foto Profil
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan (Bila Landscape) / Elemen Bawah (Bila Portrait) -->
+                <div class="right-column">
+                    <h2 class="animated-title landscape-title-info" id="title-info">Informasi Singkat</h2>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">NAMA</div>
+                        <div class="biodata-value">
+                            <span id="val-nickname">Fatur</span>
+                            <span class="pronouns">(he/him)</span>
+                        </div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">NAMA LENGKAP</div>
+                        <div class="biodata-value" id="val-fullname">Muhamad Fatur Rahman</div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">PENDIDIKAN</div>
+                        <div class="biodata-value" id="val-education">SMK Infokom Kota Bogor</div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">KELAS</div>
+                        <div class="biodata-value" id="val-class">X RPL 2 (Angkatan 29)</div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">CITA-CITA</div>
+                        <div class="biodata-value" id="val-goals" style="line-height: 1.4;">
+                            Full Stack Developer, Designer, Corporate Professional, Solo Singer
+                        </div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">TEMPAT TANGGAL LAHIR</div>
+                        <div class="biodata-value" id="val-ttl">Bogor, 18 Mei 2011</div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">HOBI</div>
+                        <div class="biodata-value" id="val-hobby">Mempelajari Bahasa, Menggambar, Menulis</div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">ALAMAT</div>
+                        <div class="biodata-value" id="val-address" style="line-height: 1.5;">
+                            Kp. Parakan Mulya, RT.04/RW.04 Gang Masjid, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610
+                        </div>
+                    </div>
+
+                    <div class="biodata-group">
+                        <div class="biodata-label">SKILLS</div>
+                        <div class="skills-container" id="val-skills"></div>
+                    </div>
+
+                    <div class="biodata-group" style="margin-top: 18px;">
+                        <div class="biodata-label">BAHASA PEMROGRAMAN</div>
+                        <div class="skills-container" id="val-languages" style="border-bottom: none;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- View 2: About Me -->
+        <div class="tab-view" id="view-about">
+            <h1 class="animated-title" id="title-about">About Me</h1>
+
+            <div class="biodata-group">
+                <div class="biodata-label">ROLE & SPESIALISASI</div>
+                <div class="biodata-value" id="val-role">Full Stack Developer</div>
+            </div>
+
+            <div class="biodata-group">
+                <div class="biodata-label">DESKRIPSI SAYA</div>
+                <div class="biodata-value" id="val-bio" style="line-height: 1.6;">
+                    Siswa yang berfokus pada pengembangan aplikasi web modern, menguasai alur Frontend hingga Backend serta berpengalaman merancang antarmuka interaktif.
+                </div>
+            </div>
+
+            <div class="biodata-group" style="margin-top: 18px;">
+                <div class="biodata-label">MEDIA SOSIAL</div>
+                <div class="social-list" id="val-social-list">
+                    <div class="social-item">
+                        <i class="fa-brands fa-instagram"></i>
+                        <span id="val-ig">@akufaturrr_</span>
+                    </div>
+                    <div class="social-item">
+                        <i class="fa-brands fa-github"></i>
+                        <span id="val-github">fatur-id18</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL ABOUT PORTFOLIO -->
+    <div class="modal-overlay" id="portfolio-modal">
+        <div class="portfolio-modal">
+            <div class="liquid-orb-1"></div>
+            <div class="liquid-orb-2"></div>
+
+            <div class="modal-header">
+                <h2>About Portfolio</h2>
+                <div class="sub-header">CATATAN PEMBARUAN & DESAIN</div>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-tag">VERSI UTAMA • V1</span>
+                <div class="slide-title">RILIS V1 & KEUTAMAAN VISUAL</div>
+                <div class="slide-desc">
+                    <strong>Jum'at, 8 Agustus 2026</strong>
+                    <ul>
+                        <li><strong>Animasi & Kenyamanan Visual:</strong> Penerapan mikro-interaksi responsif, animasi transisi teks elastis, serta adaptasi tema konsisten untuk mengurangi ketegangan mata.</li>
+                        <li><strong>Floating Navigation Dock:</strong> Navigasi melayang dengan efek ekspansi label dinamis untuk kemudahan navigasi antarmuka.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-tag">DESIGN UPDATE</span>
+                <div class="slide-title">DESAIN LIQUID GLASS & TEMA DOKUMEN</div>
+                <div class="slide-desc">
+                    <ul>
+                        <li><strong>Liquid Glassmorphism:</strong> Penggabungan siluet warna bergerak (orbs), efek kilau cahaya (<em>glass shimmer wave</em>), dan refleksi kustom.</li>
+                        <li><strong>Harmonisasi Estetika:</strong> Penyesuaian skema warna gelap (<em>Dark Blue</em>) dan terang (<em>Light Blue</em>) yang terhubung langsung dengan kartu identitas biodata dan elemen hobi/skill.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-tag">TEKNOLOGI</span>
+                <div class="slide-title">TEKNOLOGI PENGEMBANG</div>
+                <div class="slide-desc">
+                    <ul>
+                        <li><strong>HTML5 & CSS3:</strong> Struktur modular dengan CSS Variables, Flexbox, serta sistem animasi native.</li>
+                        <li><strong>JavaScript:</strong> Pengelolaan alur data profil dinamis, perpindahan tab, serta kontrol status tema visual.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-tag">UPDATE REVISI • V1.2</span>
+                <div class="slide-title">PERSISTENT MINI AVATAR & SCROLL TRIGGER</div>
+                <div class="slide-desc">
+                    <strong>Jum'at, 8 Agustus 2026</strong>
+                    <ul>
+                        <li><strong>Trigger Scroll Otomatis:</strong> Avatar profil melayang di sebelah kiri dock akan otomatis membesar/muncul sempurna tepat saat <strong>setengah dari frame foto profil</strong> mulai tertutup oleh scroll.</li>
+                        <li><strong>Ketersediaan Lintas Tab:</strong> Avatar mini tetap aktif secara presisi di tab 'About Me' serta hilang secara halus saat kembali ke posisi paling atas tab 'Profile'.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="slide-card">
+                <span class="slide-tag">UPDATE REVISI • V1.3</span>
+                <div class="slide-title">RESTRUKTURISASI TEMA & UPDATE TAUTAN SOSIAL</div>
+                <div class="slide-desc">
+                    <strong>Jum'at, 8 Agustus 2026</strong>
+                    <ul>
+                        <li><strong>Penyesuaian Hierarki Preset Tema:</strong> Penukaran posisi Light Mode menjadi pilihan utama di posisi teratas menu navigasi.</li>
+                        <li><strong>Pembaruan Tautan & Akun Sosial Media:</strong> Pembaruan kredensial profil Deska (Instagram & GitHub) serta penambahan tautan repository ganda pada akun Fatur.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button class="btn-close-modal" onclick="togglePortfolioModal(false)">
+                <i class="fa-solid fa-xmark"></i> Tutup
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'profile';
+
+        const students = {
+            fatur: {
+                nickname: "Fatur",
+                fullname: "Muhamad Fatur Rahman",
+                education: "SMK Infokom Kota Bogor",
+                class: "X RPL 2 (Angkatan 29)",
+                goals: "Full Stack Developer, Designer, Pekerja Kantoran, dan Solo Singer",
+                photo: "images/biodata1.jpg",
+                ttl: "Bogor, 18 Mei 2011",
+                hobby: "Mempelajari Bahasa, Menggambar, dan Menulis",
+                address: "Kp. Parakan Mulya, RT.04/RW.04 Gang Masjid, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610",
+                skills: [
+                    { name: "Full Stack", icon: "fa-solid fa-layer-group" },
+                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad" },
+                    { name: "Linguistics", icon: "fa-solid fa-language" },
+                    { name: "Android Porter", icon: "fa-brands fa-android" },
+                    { name: "Designer", icon: "fa-solid fa-palette" },
+                    { name: "Animation", icon: "fa-solid fa-wand-magic-sparkles" }
+                ],
+                languages: [
+                    { name: "JavaScript", icon: "fa-brands fa-js" },
+                    { name: "Python", icon: "fa-brands fa-python" },
+                    { name: "Kotlin", icon: "fa-solid fa-code" },
+                    { name: "Smali", icon: "fa-solid fa-gear" },
+                    { name: "ShellScript", icon: "fa-solid fa-terminal" },
+                    { name: "CSS", icon: "fa-solid fa-laptop-code" }
+                ],
+                role: "Full Stack Developer",
+                bio: "Hai!, Perkenalkan nama saya Muhamad Fatur Rahman, Saya adalah seorang Front-End Developer dan Android Modder Enthusiast yang gemar mewujudkan desain visual menjadi aplikasi nyata yang responsif dan intuitif. Fokus utama saya adalah membangun web dengan HTML, CSS, JavaScript, serta gemar melakukan modifikasi sistem Android seperti membuat Port ROM, Magisk Module dan Pengembangan Aplikasi menggunakan Kotlin. Selain dunia coding, saya juga suka mengisi waktu luang dengan mempelajari beberapa aksara dan bahasa asing.",
+                social: [
+                    { icon: "fa-brands fa-instagram", text: "@akufaturrr_", url: "https://www.instagram.com/akufaturrr_?igsh=MTduYXBxaWY3c2tqNw==" },
+                    { icon: "fa-brands fa-github", text: "fatur-id18", url: "https://github.com/fatur-id18" },
+                    { icon: "fa-brands fa-github", text: "zerophyx-4", url: "https://github.com/zerophyx-4" }
+                ]
+            },
+            deska: {
+                nickname: "Deska",
+                fullname: "Deska Sabil Sumantri",
+                education: "SMK Infokom Kota Bogor",
+                class: "X RPL 2 (Angkatan 29)",
+                goals: "Designer, App & Game Development", 
+                photo: "images/biodata2.jpg", 
+                ttl: "Bogor, 12 Agustus 2010",
+                hobby: "Gaming, Design Exploration",
+                address: "Kp. Awaspaninggal, RT.03/RW.09 kecamaran, Pagelaran, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610", 
+                skills: [
+                    { name: "UI/UX Design", icon: "fa-solid fa-pen-nib" },
+                    { name: "Frontend Dev", icon: "fa-solid fa-code" },
+                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad" },
+                    { name: "Visual Graphic", icon: "fa-solid fa-display" }
+                ],
+                languages: [
+                    { name: "JavaScript", icon: "fa-brands fa-js" },
+                    { name: "CSS", icon: "fa-solid fa-laptop-code" }
+                ],
+                role: "UI/UX & Frontend Dev",
+                bio: "Hai!, Nama saya Deska Sabil Sumantri. Saya memiliki passion yang mendalam di dunia desain grafis, antarmuka pengguna (UI/UX), dan pengembangan game. Saya senang mengeksplorasi konsep ide visual, merancang tata letak yang ramah pengguna, serta mewujudkannya menjadi mekanik interaktif di dalam game. Bagi saya, mengembangkan game bukan hanya tentang koding, tetapi juga tentang bagaimana menyampaikan cerita dan pengalaman visual yang berkesan bagi para pemain.",
+                social: [
+                    { icon: "fa-brands fa-instagram", text: "@sabllka", url: "https://www.instagram.com/sabllka?igsh=MXM5MGIyeWpra3FjbA==" },
+                    { icon: "fa-brands fa-github", text: "deskasabil38-max", url: "https://github.com/deskasabil38-max" }
+                ]
+            }
+        };
+
+        function renderBadges(containerId, list) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (!list || list.length === 0) {
+                container.innerHTML = '<span style="color: var(--text-muted); font-size: 14px; font-weight: 500;">-</span>';
+                return;
+            }
+            
+            list.forEach(item => {
+                const badge = document.createElement('div');
+                badge.className = 'skill-badge';
+                badge.innerHTML = '<i class="' + item.icon + '"></i> <span>' + item.name + '</span>';
+                container.appendChild(badge);
+            });
+        }
+
+        function renderSocials(socialList) {
+            const container = document.getElementById('val-social-list');
+            if (!container) return;
+            container.innerHTML = '';
+
+            socialList.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'social-item';
+                div.innerHTML = '<i class="' + item.icon + '"></i> <a href="' + item.url + '" target="_blank" rel="noopener noreferrer">' + item.text + '</a>';
+                container.appendChild(div);
+            });
+        }
+
+        function switchView(viewName) {
+            currentTab = viewName;
+            const btnProfile = document.getElementById('btn-dock-profile');
+            const btnAbout = document.getElementById('btn-dock-about');
+            const viewProfile = document.getElementById('view-profile');
+            const viewAbout = document.getElementById('view-about');
+
+            document.querySelectorAll('.dock-item').forEach(item => item.classList.remove('active'));
+
+            if (viewName === 'profile') {
+                btnProfile.classList.add('active');
+                viewProfile.classList.add('active');
+                viewAbout.classList.remove('active');
+                renderAnimatedTitle('title-profile', "Profile");
+                renderAnimatedTitle('title-info', "Informasi Singkat");
+            } else {
+                btnAbout.classList.add('active');
+                viewAbout.classList.add('active');
+                viewProfile.classList.remove('active');
+                renderAnimatedTitle('title-about', "About Me");
+            }
+
+            checkAvatarVisibility();
+        }
+
+        function checkAvatarVisibility() {
+            const miniAvatar = document.getElementById('mini-avatar');
+            const photoFrame = document.getElementById('main-photo-frame');
+
+            if (currentTab === 'about') {
+                miniAvatar.classList.add('show');
+            } else if (currentTab === 'profile' && photoFrame) {
+                const frameRect = photoFrame.getBoundingClientRect();
+                const frameCenterPoint = frameRect.top + (frameRect.height / 2);
+
+                if (frameCenterPoint <= 80) {
+                    miniAvatar.classList.add('show');
+                } else {
+                    miniAvatar.classList.remove('show');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', checkAvatarVisibility);
+
+        const menuBtn = document.getElementById('menu-toggle');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', () => {
+            dropdownMenu.classList.remove('show');
+        });
+
+        /* Background diambil dari folder background/, sesuai tema */
+        const BG_LIGHT = "background/background1.jpg";
+        const BG_DARK = "background/background2.jpg";
+
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+
+            /* Ganti foto background sesuai tema */
+            document.getElementById('bg-photo').src = theme === 'light' ? BG_LIGHT : BG_DARK;
+
+            document.getElementById('btn-theme-dark').classList.toggle('active', theme === 'dark');
+            document.getElementById('btn-theme-light').classList.toggle('active', theme === 'light');
+        }
+
+        function setStudent(key) {
+            const data = students[key];
+            document.getElementById('val-nickname').innerText = data.nickname;
+            document.getElementById('val-fullname').innerText = data.fullname;
+            
+            document.getElementById('val-education').innerText = data.education || '-';
+            document.getElementById('val-class').innerText = data.class || '-';
+            document.getElementById('val-goals').innerText = data.goals || '-';
+
+            document.getElementById('val-ttl').innerText = data.ttl;
+            document.getElementById('val-hobby').innerText = data.hobby;
+            document.getElementById('val-address').innerText = data.address || '-';
+            document.getElementById('val-role').innerText = data.role;
+            document.getElementById('val-bio').innerText = data.bio;
+
+            const photoFrame = document.getElementById('main-photo-frame');
+            const miniAvatar = document.getElementById('mini-avatar');
+
+            if (data.photo) {
+                photoFrame.innerHTML = '<img src="' + data.photo + '" alt="' + data.fullname + '" style="width:100%; height:100%; object-fit:cover; border-radius: inherit;">';
+                miniAvatar.innerHTML = '<img src="' + data.photo + '" alt="' + data.nickname + '" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">';
+            } else {
+                photoFrame.innerHTML = '<i class="fa-solid fa-image" style="margin-right: 8px;"></i> Foto Profil';
+                miniAvatar.innerHTML = '<i class="fa-solid fa-user-astronaut"></i>';
+            }
+
+            renderSocials(data.social);
+            renderBadges('val-skills', data.skills);
+            renderBadges('val-languages', data.languages);
+
+            document.getElementById('btn-student-fatur').classList.toggle('active', key === 'fatur');
+            document.getElementById('btn-student-deska').classList.toggle('active', key === 'deska');
+        }
+
+        function renderAnimatedTitle(elementId, text) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+            container.innerHTML = '';
+            
+            text.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.innerText = char === ' ' ? '\u00A0' : char;
+                span.style.animationDelay = (index * 0.05) + 's';
+                container.appendChild(span);
+            });
+        }
+
+        function togglePortfolioModal(show) {
+            const modal = document.getElementById('portfolio-modal');
+            if(show) {
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('show'), 10);
+            } else {
+                modal.classList.remove('show');
+                setTimeout(() => modal.style.display = 'none', 300);
+            }
+        }
+
+        window.addEventListener('load', () => {
+            renderAnimatedTitle('title-profile', "Profile");
+            renderAnimatedTitle('title-info', "Informasi Singkat");
+            setStudent('fatur');
+            checkAvatarVisibility();
+        });
+    </script>
+</body>
+</html>
