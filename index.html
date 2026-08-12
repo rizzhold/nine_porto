@@ -512,11 +512,80 @@
             color: var(--text-main);
             font-size: 13px;
             font-weight: 600;
+            cursor: pointer;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: flex-basis 0.35s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-radius 0.35s ease, 
+                        background 0.35s ease,
+                        padding 0.35s ease;
         }
 
         .skill-badge i {
             color: var(--accent-color);
             font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        /* ===== STATE TERBUKA: melebar penuh & mendorong pil lain ===== */
+        .skill-badge.expanded {
+            flex-basis: 100%;
+            width: 100%;
+            align-items: flex-start;
+            border-radius: 16px;
+            padding: 14px 40px 14px 14px;
+            background: var(--inner-card-bg);
+            position: relative;
+            cursor: default;
+        }
+
+        .skill-badge .badge-label {
+            white-space: nowrap;
+        }
+
+        .skill-badge.expanded .badge-label {
+            white-space: normal;
+        }
+
+        .skill-desc {
+            display: none;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 12.5px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text-sub);
+        }
+
+        .skill-badge.expanded .skill-desc {
+            display: block;
+            animation: fadeIn 0.3s ease 0.1s both;
+        }
+
+        .badge-close-btn {
+            display: none;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1.5px solid #ef4444;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .skill-badge.expanded .badge-close-btn {
+            display: flex;
+        }
+
+        .badge-close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
         }
 
         .tab-view {
@@ -762,6 +831,11 @@
         }
 
         @keyframes elasticSlideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
@@ -1029,20 +1103,20 @@
                 hobby: "Mempelajari Bahasa, Menggambar, dan Menulis",
                 address: "Kp. Parakan Mulya, RT.04/RW.04 Gang Masjid, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610",
                 skills: [
-                    { name: "Full Stack", icon: "fa-solid fa-layer-group" },
-                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad" },
-                    { name: "Linguistics", icon: "fa-solid fa-language" },
-                    { name: "Android Porter", icon: "fa-brands fa-android" },
-                    { name: "Designer", icon: "fa-solid fa-palette" },
-                    { name: "Animation", icon: "fa-solid fa-wand-magic-sparkles" }
+                    { name: "Full Stack", icon: "fa-solid fa-layer-group", desc: "Placeholder: jelasin pengalaman Fatur di Full Stack Development di sini." },
+                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad", desc: "Mempunyai pengalaman membuat tower." },
+                    { name: "Linguistics", icon: "fa-solid fa-language", desc: "Gemar mempelajari bahasa & aksara asing di waktu luang." },
+                    { name: "Android Porter", icon: "fa-brands fa-android", desc: "Placeholder: jelasin pengalaman porting ROM/Android di sini." },
+                    { name: "Designer", icon: "fa-solid fa-palette", desc: "Placeholder: jelasin pengalaman desain visual di sini." },
+                    { name: "Animation", icon: "fa-solid fa-wand-magic-sparkles", desc: "Placeholder: jelasin pengalaman animasi/motion di sini." }
                 ],
                 languages: [
-                    { name: "JavaScript", icon: "fa-brands fa-js" },
-                    { name: "Python", icon: "fa-brands fa-python" },
-                    { name: "Kotlin", icon: "fa-solid fa-code" },
-                    { name: "Smali", icon: "fa-solid fa-gear" },
-                    { name: "ShellScript", icon: "fa-solid fa-terminal" },
-                    { name: "CSS", icon: "fa-solid fa-laptop-code" }
+                    { name: "JavaScript", icon: "fa-brands fa-js", desc: "Placeholder: jelasin pengalaman pakai JavaScript di sini." },
+                    { name: "Python", icon: "fa-brands fa-python", desc: "Placeholder: jelasin pengalaman pakai Python di sini." },
+                    { name: "Kotlin", icon: "fa-solid fa-code", desc: "Placeholder: jelasin pengalaman pakai Kotlin di sini." },
+                    { name: "Smali", icon: "fa-solid fa-gear", desc: "Placeholder: jelasin pengalaman pakai Smali di sini." },
+                    { name: "ShellScript", icon: "fa-solid fa-terminal", desc: "Placeholder: jelasin pengalaman pakai ShellScript di sini." },
+                    { name: "CSS", icon: "fa-solid fa-laptop-code", desc: "Placeholder: jelasin pengalaman pakai CSS di sini." }
                 ],
                 role: "Full Stack Developer",
                 bio: "Hai!, Perkenalkan nama saya Muhamad Fatur Rahman, Saya adalah seorang Front-End Developer dan Android Modder Enthusiast yang gemar mewujudkan desain visual menjadi aplikasi nyata yang responsif dan intuitif. Fokus utama saya adalah membangun web dengan HTML, CSS, JavaScript, serta gemar melakukan modifikasi sistem Android seperti membuat Port ROM, Magisk Module dan Pengembangan Aplikasi menggunakan Kotlin. Selain dunia coding, saya juga suka mengisi waktu luang dengan mempelajari beberapa aksara dan bahasa asing.",
@@ -1063,14 +1137,14 @@
                 hobby: "Gaming, Design Exploration",
                 address: "Kp. Awaspaninggal, RT.03/RW.09 kecamaran, Pagelaran, Kec. Ciomas, Kabupaten Bogor, Jawa Barat 16610", 
                 skills: [
-                    { name: "UI/UX Design", icon: "fa-solid fa-pen-nib" },
-                    { name: "Frontend Dev", icon: "fa-solid fa-code" },
-                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad" },
-                    { name: "Visual Graphic", icon: "fa-solid fa-display" }
+                    { name: "UI/UX Design", icon: "fa-solid fa-pen-nib", desc: "Placeholder: jelasin pengalaman UI/UX Design di sini." },
+                    { name: "Frontend Dev", icon: "fa-solid fa-code", desc: "Placeholder: jelasin pengalaman Frontend Development di sini." },
+                    { name: "Roblox Studio", icon: "fa-solid fa-gamepad", desc: "Placeholder: jelasin pengalaman Roblox Studio Deska di sini." },
+                    { name: "Visual Graphic", icon: "fa-solid fa-display", desc: "Placeholder: jelasin pengalaman desain grafis di sini." }
                 ],
                 languages: [
-                    { name: "JavaScript", icon: "fa-brands fa-js" },
-                    { name: "CSS", icon: "fa-solid fa-laptop-code" }
+                    { name: "JavaScript", icon: "fa-brands fa-js", desc: "Placeholder: jelasin pengalaman pakai JavaScript di sini." },
+                    { name: "CSS", icon: "fa-solid fa-laptop-code", desc: "Placeholder: jelasin pengalaman pakai CSS di sini." }
                 ],
                 role: "UI/UX & Frontend Dev",
                 bio: "Hai!, Nama saya Deska Sabil Sumantri. Saya memiliki passion yang mendalam di dunia desain grafis, antarmuka pengguna (UI/UX), dan pengembangan game. Saya senang mengeksplorasi konsep ide visual, merancang tata letak yang ramah pengguna, serta mewujudkannya menjadi mekanik interaktif di dalam game. Bagi saya, mengembangkan game bukan hanya tentang koding, tetapi juga tentang bagaimana menyampaikan cerita dan pengalaman visual yang berkesan bagi para pemain.",
@@ -1094,10 +1168,44 @@
             list.forEach(item => {
                 const badge = document.createElement('div');
                 badge.className = 'skill-badge';
-                badge.innerHTML = '<i class="' + item.icon + '"></i> <span>' + item.name + '</span>';
+                badge.innerHTML =
+                    '<i class="' + item.icon + '"></i> ' +
+                    '<span class="badge-label">' + item.name + '</span>' +
+                    '<p class="skill-desc">' + (item.desc || '-') + '</p>' +
+                    '<button class="badge-close-btn" aria-label="Tutup" title="Tutup">✕</button>';
+
+                badge.addEventListener('click', (e) => {
+                    e.stopPropagation();
+
+                    const alreadyOpen = badge.classList.contains('expanded');
+
+                    // tutup badge lain yang lagi kebuka (biar cuma 1 yang expand)
+                    document.querySelectorAll('.skill-badge.expanded').forEach(b => {
+                        b.classList.remove('expanded');
+                    });
+
+                    if (!alreadyOpen) {
+                        badge.classList.add('expanded');
+                    }
+                });
+
+                badge.querySelector('.badge-close-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    badge.classList.remove('expanded');
+                });
+
                 container.appendChild(badge);
             });
         }
+
+        // tap di luar badge -> tutup badge yang lagi expand
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.skill-badge')) {
+                document.querySelectorAll('.skill-badge.expanded').forEach(b => {
+                    b.classList.remove('expanded');
+                });
+            }
+        });
 
         function renderSocials(socialList) {
             const container = document.getElementById('val-social-list');
